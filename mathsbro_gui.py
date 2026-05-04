@@ -163,7 +163,7 @@ class MathGameGUI:
         self.root = root
         self.root.title("MathsBro Quiz Game")
         self.root.geometry("650x720")
-        self.root.configure(bg="#1e1e1e")
+        self.root.configure(bg="#1E262F")
 
         self.game = None
         self.current_question = ""
@@ -175,40 +175,57 @@ class MathGameGUI:
         self.create_widgets()
 
     def create_widgets(self):
-        self.main_frame = tk.Frame(self.root, bg="#1e1e1e")
+        BG_DARK = "#1E262F"         # Black Pearl
+        BG_CARD = "#415365"         # Into the Stratosphere
+        BLUE_SOFT = "#697F93"       # Blue Prince
+        GREY_SOFT = "#9D9F97"       # Wet Pavement
+        TEXT_LIGHT = "#D6D4C9"      # Soft Secret
+
+        BUTTON_START = "#D6D4C9"    # light contrasting button
+        BUTTON_START_HOVER = "#c9c6b9"
+
+        BUTTON_SUBMIT = "#697F93"   # blue contrasting button
+        BUTTON_SUBMIT_HOVER = "#5d7185"
+
+        ENTRY_BG = "#D6D4C9"
+        ENTRY_TEXT = "#1E262F"
+
+        self.main_frame = tk.Frame(self.root, bg=BG_DARK)
         self.main_frame.pack(fill="both", expand=True, padx=30, pady=25)
 
         title = tk.Label(
             self.main_frame,
             text="MathsBro Quiz Game",
             font=("Arial", 28, "bold"),
-            bg="#1e1e1e",
-            fg="white"
+            bg=BG_DARK,
+            fg=TEXT_LIGHT
         )
-        title.pack(pady=20)
+        title.pack(pady=(15, 20))
 
         mode_text = tk.Label(
             self.main_frame,
             text="Choose a difficulty level",
             font=("Arial", 15, "bold"),
-            bg="#1e1e1e",
-            fg="white"
+            bg=BG_DARK,
+            fg=TEXT_LIGHT
         )
-        mode_text.pack(pady=10)
+        mode_text.pack(pady=(5, 10))
 
         self.mode_var = tk.StringVar(value="demo")
 
-        mode_frame = tk.Frame(self.main_frame, bg="#1e1e1e")
+        mode_frame = tk.Frame(self.main_frame, bg=BG_DARK)
         mode_frame.pack(pady=10)
 
         radio_style = {
             "variable": self.mode_var,
-            "bg": "#1e1e1e",
-            "fg": "white",
-            "selectcolor": "#1e1e1e",
-            "activebackground": "#1e1e1e",
-            "activeforeground": "white",
-            "font": ("Arial", 12)
+            "bg": BG_DARK,
+            "fg": TEXT_LIGHT,
+            "selectcolor": BG_DARK,
+            "activebackground": BG_DARK,
+            "activeforeground": TEXT_LIGHT,
+            "font": ("Arial", 12),
+            "highlightthickness": 0,
+            "bd": 0
         }
 
         tk.Radiobutton(mode_frame, text="Demo", value="demo", **radio_style).grid(row=0, column=0, padx=15)
@@ -222,42 +239,60 @@ class MathGameGUI:
             font=("Arial", 14, "bold"),
             width=18,
             height=2,
-            bg="#5b2c83",
-            fg="white",
-            activebackground="#7d4cc2",
-            activeforeground="white",
+            bg=BUTTON_START,
+            fg=BG_DARK,
+            activebackground=BUTTON_START_HOVER,
+            activeforeground=GREY_SOFT,
+            disabledforeground="#7b7b7b",
+            relief="flat",
+            bd=0,
+            highlightthickness=0,
+            cursor="hand2",
             command=self.start_game
         )
         self.start_button.pack(pady=20)
 
-        self.question_label = tk.Label(
+        # Question card
+        self.question_card = tk.Frame(
             self.main_frame,
-            text="Question will appear here",
-            font=("Arial", 26, "bold"),
-            bg="#1e1e1e",
-            fg="#ffffff"
+            bg=BG_CARD,
+            bd=0,
+            highlightthickness=0
         )
-        self.question_label.pack(pady=35)
+        self.question_card.pack(fill="x", pady=(10, 25), padx=30)
+
+        self.question_label = tk.Label(
+            self.question_card,
+            text="Question will appear here",
+            font=("Arial", 24, "bold"),
+            bg=BG_CARD,
+            fg=TEXT_LIGHT,
+            pady=25
+        )
+        self.question_label.pack()
 
         answer_label = tk.Label(
             self.main_frame,
             text="Enter your answer:",
             font=("Arial", 14, "bold"),
-            bg="#1e1e1e",
-            fg="white"
+            bg=BG_DARK,
+            fg=TEXT_LIGHT
         )
-        answer_label.pack(pady=8)
+        answer_label.pack(pady=(5, 8))
 
         self.answer_entry = tk.Entry(
             self.main_frame,
-            font=("Arial", 22),
+            font=("Arial", 22, "bold"),
             justify="center",
             width=15,
-            bg="white",
-            fg="black",
-            insertbackground="black"
+            bg=ENTRY_BG,
+            fg=ENTRY_TEXT,
+            insertbackground=ENTRY_TEXT,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
         )
-        self.answer_entry.pack(pady=10)
+        self.answer_entry.pack(pady=10, ipady=10)
         self.answer_entry.config(state="disabled")
 
         self.submit_button = tk.Button(
@@ -266,10 +301,15 @@ class MathGameGUI:
             font=("Arial", 13, "bold"),
             width=18,
             height=2,
-            bg="#5b2c83",
-            fg="white",
-            activebackground="#7d4cc2",
-            activeforeground="white",
+            bg=BUTTON_SUBMIT,
+            fg=BLUE_SOFT,
+            activebackground=BUTTON_SUBMIT_HOVER,
+            activeforeground=BLUE_SOFT,
+            disabledforeground="#c0c0c0",
+            relief="flat",
+            bd=0,
+            highlightthickness=0,
+            cursor="hand2",
             command=self.submit_answer
         )
         self.submit_button.pack(pady=15)
@@ -279,28 +319,33 @@ class MathGameGUI:
             self.main_frame,
             text="",
             font=("Arial", 15, "bold"),
-            bg="#1e1e1e",
-            fg="white"
+            bg=BG_DARK,
+            fg=TEXT_LIGHT
         )
-        self.feedback_label.pack(pady=10)
+        self.feedback_label.pack(pady=(10, 8))
 
         self.score_label = tk.Label(
             self.main_frame,
             text="Score: 0 / 0",
             font=("Arial", 15, "bold"),
-            bg="#1e1e1e",
-            fg="white"
+            bg=BG_DARK,
+            fg=TEXT_LIGHT
         )
-        self.score_label.pack(pady=10)
+        self.score_label.pack(pady=(5, 10))
 
         self.result_text = tk.Text(
             self.main_frame,
             width=60,
             height=10,
             font=("Arial", 11),
-            bg="#2b2b2b",
-            fg="white",
-            insertbackground="white"
+            bg=BG_CARD,
+            fg=TEXT_LIGHT,
+            insertbackground=TEXT_LIGHT,
+            relief="flat",
+            bd=0,
+            highlightthickness=0,
+            padx=15,
+            pady=12
         )
         self.result_text.pack(pady=15)
         self.result_text.config(state="disabled")
@@ -336,6 +381,8 @@ class MathGameGUI:
             self.question_number += 1
             self.current_question, self.correct_answer = self.game.generate_question()
 
+            #print(f"Question {self.question_number}: {self.current_question} = ?")
+
             self.question_label.config(
                 text=f"Question {self.question_number}:   {self.current_question} = ?"
             )
@@ -362,20 +409,20 @@ class MathGameGUI:
             if user_answer == self.correct_answer:
                 is_correct = True
                 self.correct_count += 1
-                self.feedback_label.config(text="Correct!", fg="green")
+                self.feedback_label.config(text="Correct!", fg="#D6D4C9")
             else:
                 is_correct = False
                 self.feedback_label.config(
-                    text=f"Wrong! Correct answer is {self.correct_answer}",
-                    fg="red"
+                    text=f"Invalid input! Correct answer is {self.correct_answer}",
+                    fg="#9D9F97"
                 )
 
         except ValueError:
             user_answer = "Invalid"
             is_correct = False
             self.feedback_label.config(
-                text=f"Invalid input! Correct answer is {self.correct_answer}",
-                fg="red"
+                text=f"Wrong! Correct answer is {self.correct_answer}",
+                fg="#9D9F97"
             )
 
         self.results.append({
@@ -428,7 +475,7 @@ class MathGameGUI:
         self.question_label.config(text="Game Finished!")
         self.feedback_label.config(
             text=f"Final Score: {self.correct_count}/{total_questions} | {percentage:.1f}%",
-            fg="#5b2c83"
+            fg="#D6D4C9"
         )
 
         self.answer_entry.config(state="disabled")
